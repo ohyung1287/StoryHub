@@ -38,6 +38,10 @@ const MenuItems = [
     url: "/register",
   },
   {
+    label: "Shop",
+    url: "/shop",
+  },
+  {
     label: "Deep's component",
     url: "/deep",
   },

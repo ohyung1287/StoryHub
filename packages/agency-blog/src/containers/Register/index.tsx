@@ -3,6 +3,9 @@ import { Formik, FormikActions, FormikProps, Form } from "formik"
 import * as Yup from "yup"
 import Input from "components/Input/Input"
 import Button from "components/Button/Button"
+import Web3 from "web3"
+import axios from "axios"
+
 import {
   ContactWrapper,
   ContactPageTitle,
@@ -51,58 +54,39 @@ const Contact: React.SFC<{}> = () => {
           <Form>
             <ContactWrapper>
               <ContactPageTitle>
-                <h2>Contact</h2>
-                <p>
-                  StoryHub theme comes with a contact form built-in. You can use
-                  this form with Gatsbay Js service and get up to 50 submissions
-                  for free per form per month. Also, you can easily switch to
-                  another service if you want.
-                </p>
+                <h2>Artist register</h2>
+                <p>Connect to your MetaMask Ethereum account.</p>
               </ContactPageTitle>
               <ContactFromWrapper>
                 <InputGroup>
-                  <Input
-                    type="text"
-                    name="firstName"
-                    value={`${values.firstName}`}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label="Name"
-                    notification={`${
-                      errors.firstName && touched.firstName
-                        ? errors.firstName
-                        : ""
-                    }`}
-                  />
-                  <Input
-                    type="email"
-                    name="email"
-                    value={`${values.email}`}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label="Email"
-                    notification={`${
-                      errors.email && touched.email ? errors.email : ""
-                    }`}
+                  <Button
+                    title="connect to MetaMask"
+                    onClick={() => {
+                      if (window.ethereum) {
+                        window.web3 = new Web3(window.ethereum)
+                        window.ethereum
+                          .enable()
+                          .then(res => {
+                            // this.setState({ wallet: res[0] })
+                            // alert(res[0])
+                            axios
+                              .post(`http://localhost:8080/getOwnerTokens/`, {
+                                address: res[0],
+                              })
+                              .then(res => {
+                                // console.log(res.data);
+                                console.log(res)
+                                alert("Connect successfully")
+                              })
+                              .catch(err => console.log(err))
+                          })
+                          .catch(err => alert(err))
+                      } else if (window.web3) {
+                        window.web3 = new Web3(window.web3.currentProvider)
+                      }
+                    }}
                   />
                 </InputGroup>
-                <Input
-                  type="textarea"
-                  name="message"
-                  value={`${values.message}`}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Message"
-                  notification={
-                    errors.message && touched.message ? errors.message : ""
-                  }
-                />
-                <Button
-                  title="Submit"
-                  type="submit"
-                  isLoading={isSubmitting ? true : false}
-                  loader="Submitting.."
-                />
               </ContactFromWrapper>
             </ContactWrapper>
           </Form>

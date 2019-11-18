@@ -1,18 +1,18 @@
 import React from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import Contact from "../containers/Contact"
+import Register from "../containers/Register"
 
 type RegisterProps = {}
 
-const ContactPage: React.FunctionComponent<RegisterProps> = props => {
+const RegisterPage: React.FunctionComponent<RegisterProps> = props => {
   return (
     <Layout>
-      <SEO title="Join Us" description="JJJJOin us." />
+      <SEO title="Join Us" description="Join us." />
 
-      <Contact />
+      <Register />
     </Layout>
   )
 }
 
-export default ContactPage
+export default RegisterPage
