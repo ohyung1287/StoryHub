@@ -6,37 +6,52 @@ import Web3 from "web3"
 import axios from "axios"
 
 import { AboutWrapper, AboutImage, AboutPageTitle, AboutDetails } from "./style"
-import { Formik } from "formik"
-const Shop: React.SFC<{}> = () => {
-  let item: any = []
+export default class FormPage extends React.Component {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      storeList: null,
+    }
+  }
+  componentWillMount() {
+    axios
+      .get(`http://localhost:8080/getOnStoreTokens/`)
+      .then(res => {
+        this.setState({ storeList: res.data })
 
-  axios
-    .get(`http://localhost:8080/getOnStoreTokens/`)
-    .then(res => {
-      for (var i = 0; i < res.data.length; i++) {
-        if (item !== undefined)
-          item.push(
-            <div>
-              <div>artist:{res.data[i].artist}</div>
-              <div>descrption:{res.data[i].description}</div>
-              <div>realart:{res.data[i].realart}</div>
-              <div>thumnail:{res.data[i].thumnail}</div>
-              <div>timestamp:{res.data[i].timestamp}</div>
-              <div>id:{res.data[i].id}</div>
-            </div>
-          )
+        // console.log(item)
+      })
+      .catch(err => alert(err))
+  }
+  render() {
+    let item = []
+    var storeList = this.state.storeList
+    if (storeList != null)
+      for (var i = 0; i < storeList.length; i++) {
+        item.push(
+          <AboutWrapper>
+            <AboutPageTitle>{storeList[i].name}</AboutPageTitle>
+            <AboutDetails>
+              <div>artist:{storeList[i].artist}</div>
+              <div>descrption:{storeList[i].description}</div>
+              <div>realart:{storeList[i].realart}</div>
+              <div>thumnail:{storeList[i].thumnail}</div>
+              <div>timestamp:{storeList[i].timestamp}</div>
+              <div>id:{storeList[i].id}</div>
+            </AboutDetails>
+            <Button title="Buy"></Button>
+          </AboutWrapper>
+        )
       }
-      // console.log(item)
-    })
-    .catch(err => alert(err))
-
-  return (
-    <Formik
-      render={props => {
-        console.log(item)
-        return <AboutWrapper>{item}</AboutWrapper>
-      }}
-    />
-  )
+    return (
+      <AboutWrapper>
+        <AboutPageTitle>Store</AboutPageTitle>
+        {item}
+      </AboutWrapper>
+    )
+  }
 }
-export default Shop
+/**
+ *
+ *
+ */
